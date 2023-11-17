@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel='stylesheet' href='../stylesheets/style3.css' />
+    <link rel="shortcut icon" href="../images/Spotify_favicon.png" type="image/x-icon">
+</head>
+<style>
+.text1{
+  width: 1100px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+}
+.title{
+      height: 150px;
+      width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+.title h5 {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.text1 p {
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 500;
+}
+.text a{
+    color: red;
+    text-decoration: none;
+  cursor: pointer;
+}
+.like{
+    width: 100px;
+    height: 150px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.part1{
+    margin: 20px;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   background: linear-gradient( to bottom right, #592DF0,#BAE1D9 );
+}
+.part1 span{
+    color: #ffffff;
+    font-size: 80px;
+}
+.part2{
+    margin:50px 10px;
+    width: 800px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.part2 h2{
+    color: #fff;
+    font-size: 85px;
+}
+.part2 p{
+    font-size: 15px;
+    color: #fff;
+    padding: 0px 30px;
+}
+</style>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <a href="">
+                <img src="../images/Spotify Logo.png" alt="">
+            </a>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="fa fa-home"></span>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/search">
+                        <span class="fa fa-search"></span>
+                        <span class="a">Search</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa fas fa-book"></span>
+                        <span>Your Library</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="">
+                        <span class="fa fa-home"></span>
+                        <span>Create Playlist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/like">
+                        <span class="fa fa-heart"></span>
+                        <span>Liked Songs</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="policies">
+            <ul>
+                <li>
+                    <a href="">Cookies</a>
+                </li>
+                <li>
+                    <a href="">Privacy</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="topbar">
+
+            <div class="prev-next-buttons">
+                <button type="button" class="fa fas fa-chevron-left"></button>
+                <button type="button" class="fa fas fa-chevron-right"></button>
+            </div>
+            <div class="navbar">
+                <ul>
+                    <li>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </li>
+                </ul>
+                <button type="button">Explore premium</button>
+            </div>
+        </div>
+        <div class="right">
+        <div class="container">
+            <div class="part1">
+                <span class="fa fa-heart"></span> 
+            </div>
+            <div class="part2">
+                <h2>Liked  Songs</h2>
+                <p><%= LikesongUser.username %> . <%= LikesongUser.liked.length %> songs</p>
+            </div>
+        </div>
+        <div class="music">
+     <% LikesongUser.liked.forEach(like=>{   %>
+                <div class="song" onclick="songCardClicked('<%= like.fileName %>')" >
+                  <img src="../poster/<%= like.poster %>" alt="">
+                  <div class="text">
+                    <h5><%= like.title %></h5>
+                    <p><%= like.album %></p>
+                    <p><%= like.artist %></p>
+                    <a href="/unlike/<%= like._id %>">
+                    <span class="fa fa-heart"></span>
+                      </a>
+                </div>
+                <div class="play">
+                    <span class="fa fa-play"></span>
+                   </div>
+                </div>
+         <% }) %> 
+    </div>
+        <div id="bottom-bar">
+            <h4 class="songName"></h4>
+            <audio src="/stream" controls></audio> 
+    </div>
+ </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js" integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ <script>
+   async function songCardClicked(fileName){
+    await axios.get(`/songName/${fileName}`)
+      .then(function(songName){
+        document.querySelector('.songName').innerHTML = songName.data.title
+      })
+         document.querySelector('audio').setAttribute('src',`/stream/${fileName}`)
+         document.querySelector('audio').play()
+         //  console.log(fileName)
+        }
+ </script>
+</body>
+<script src="https://kit.fontawesome.com/ef9a692198.js" crossorigin="anonymous"></script>
+</html>

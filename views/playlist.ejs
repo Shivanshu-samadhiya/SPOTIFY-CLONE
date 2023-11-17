@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel='stylesheet' href='../stylesheets/style3.css' />
+    <link rel="shortcut icon" href="../images/Spotify_favicon.png" type="image/x-icon">
+</head>
+<style>
+.container{
+    width: 1185px;
+    height: 300px;
+    background-color: black;
+    display: flex;
+    overflow: hidden;
+}
+.part1{
+    margin: 20px;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   background-color:#282828;
+}
+.part1 span{
+  font-size: 80px;
+  color: #4D4D4D;
+}
+.part2{
+    margin:50px 10px;
+    width: 800px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.part2 h2{
+    color: #fff;
+    font-size: 85px;
+}
+.part2 p{
+    font-size: 15px;
+    color: #fff;
+    padding: 0px 30px;
+}
+/* The container <div> - needed to position the dropdown content */
+    .dropdown {
+
+position: relative;
+display: inline-block;
+}
+.dropbtn {
+  background-color:#1db954;
+  color: white;
+  padding: 4px 4px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+</style>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <a href="">
+                <img src="../images/Spotify Logo.png" alt="">
+            </a>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="fa fa-home"></span>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/search">
+                        <span class="fa fa-search"></span>
+                        <span class="a">Search</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa fas fa-book"></span>
+                        <span>Your Library</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li>
+                    
+                        <span class="fa fa-home"></span>
+                        <span>Create Playlist</span>
+                   
+                </li>
+                
+                <li>
+                    <a href="/liked">
+                        <span class="fa fa-heart"></span>
+                        <span>Liked Songs</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="policies">
+            <ul>
+                <li>
+                    <a href="">Cookies</a>
+                </li>
+                <li>
+                    <a href="">Privacy</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="topbar">
+            <div class="prev-next-buttons">
+                <button type="button" class="fa fas fa-chevron-left"></button>
+                <button type="button" class="fa fas fa-chevron-right"></button>
+            </div>
+            <div class="navbar">
+                <ul>
+                    <li>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </li>
+                </ul>
+                <button type="button">Explore premium</button>
+            </div>
+        </div>
+        <div class="right">
+            <div class="container">
+                <div class="part1">
+                    <span class="fas fa-music"></span>
+                </div>
+                <div class="part2">
+                    <h2>My playlist</h2>
+                    <p><%= playlist.name %> . <%= playlist.songs.length %> song's </p>
+                </div>
+            </div>
+            <div class="music">
+            <% playlist.songs.forEach(playl=> { %>
+                <div class="song" onclick="songCardClicked('<%= playl.fileName %>')" >
+                    <img src="../poster/<%= playl.poster %>" alt="">
+                    <div class="text">
+                      <h5><%= playl.title %></h5>
+                      <p><%= playl.album %></p>
+                      <p><%= playl.artist %></p>
+                  </div>
+                  <div class="icons">
+                    <i class="fa fa-heart" aria-hidden="true"></i>
+                    <div class="dropdown">
+                        <a href="/removeplaylist/<%= playlist._id %>/<%= playl._id %>">
+                        <button class="dropbtn">Remove Playlist</button>
+                           </a>
+                     </div>
+                  </div>
+                  <div class="play">
+                   <span class="fa fa-play"></span>
+                  </div>
+                  </div>
+           <% }) %>
+            </div>
+        </div>
+        <div id="bottom-bar">
+            <h4 class="songName"></h4>
+            <audio src="/stream" controls></audio> 
+        </div>
+ </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js" integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+  
+async function songCardClicked(filename) {
+    document.querySelector('audio').setAttribute('src', `/stream/${filename}`)
+    document.querySelector('audio').play()
+      await axios.get(`/SongName/${filename}`)
+      .then(function(songName){
+        document.querySelector('.songName').innerHTML=songName.data.title
+      })
+  }
+</script>
+
+</body>
+<script src="https://kit.fontawesome.com/ef9a692198.js" crossorigin="anonymous"></script>
+</html>
