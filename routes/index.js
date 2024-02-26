@@ -15,7 +15,7 @@ const userModel = require('../models/userModel');
 
 
 
-mongoose.connect('mongodb://0.0.0.0/spt-n15').then(() => {
+mongoose.connect('mongodb+srv://shivanshusamadhiya:Datia123@spotify.zb6eoen.mongodb.net/spotify?retryWrites=true&w=majority&appName=spotify').then(() => {
   console.log('connected to database')
 }).catch(err => {
   console.log(err)
